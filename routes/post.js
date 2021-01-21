@@ -32,9 +32,20 @@ router.post('/createpost',loginMiddleware,(req,res)=>{
 
 router.get('/allposts',(req,res)=>{
     Post.find()
-    .populate('postedBy','_id name')
+    .populate('postedBy','_id name')       //populate the 'postedBy' with only id and name
     .then(posts => {
         res.json({posts:posts})
+    })
+    .catch(err => {
+        console.log(err);
+    })
+})
+
+router.get('/myposts',loginMiddleware,(req,res) => {
+    Post.find({postedBy:req.user._id})
+    .populate("postedBy","_id name")
+    .then(mypost=>{
+        res.json({mypost})
     })
     .catch(err => {
         console.log(err);
